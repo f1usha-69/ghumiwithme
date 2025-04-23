@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Razorpay Payment</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <h1>Buy Product – ₹500</h1>
+  <button id="pay-btn">Pay Now</button>
+
+  <script>
+    document.getElementById('pay-btn').onclick = async function () {
+      const response = await fetch('/create-order', { method: 'POST' });
+      const order = await response.json();
+
+      const options = {
+        key: "rzp_test_YourKeyID", 
+        amount: order.amount,
+        currency: order.currency,
+        name: "My Company",
+        description: "Test Transaction",
+        order_id: order.id,
+        handler: function (response) {
+          alert("Payment successful!");
+          console.log(response);
+        },
+        prefill: {
+          name: "John Doe",
+          email: "john@example.com",
+          contact: "9999999999"
+        },
+        theme: {
+          color: "#3399cc"
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+</body>
+</html>
